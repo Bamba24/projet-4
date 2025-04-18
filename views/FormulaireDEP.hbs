@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="./src/assets/icons/budget-logo.svg" type="image/x-icon">
+  <!-- cdn font awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- style.css -->
+  <link rel="stylesheet" href="style.css">
+  <title>Application de gestion de budget</title>
+</head>
+<body>
+  <main>
+      <!-- section formulaire depense -->
+      <section class="section_formulaire_depenses">
+        <h2>Ajouter une depense</h2>
+        <form action="" id="form_depense" method="POST">
+          <div class="form_group">
+            <label  for="titre">Titre</label>
+            <input type="text" id="titre_depense" name="titre" placeholder="Titre de la depense">
+          </div>
+          <div class="form_group">
+            <label  for="montant">Montant</label>
+            <input type="number" id="montant_depense" name="montant" placeholder="Montant de la depense" step="1000">
+          </div>
+          <button class="btn_valider btn_valider_depense" type="submit">Valider</button>
+        </form>
+      </section>
+  </main>
+</body>
+
+<script>
+  const btnValider = document.querySelector('.btn_valider_depense');
+
+  btnValider.addEventListener('click', function(event) {
+    
+    const titreDepense = document.getElementById('titre_depense').value;
+    const montantDepense = document.getElementById('montant_depense').value;
+
+    if (titreDepense > 0 || montantDepense > 0) {
+      // Ici, vous pouvez envoyer les données au serveur ou les traiter comme vous le souhaitez
+      console.log(`Titre: ${titreDepense}, Montant: ${montantDepense}`);
+    } else {
+      event.preventDefault(); // Empêche le rechargement de la page
+      alert('Veuillez remplir tous les champs.');
+    }
+  });
+
+  </script>
+</html>

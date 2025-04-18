@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="./src/assets/icons/budget-logo.svg" type="image/x-icon">
+  <!-- cdn font awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- style.css -->
+  <link rel="stylesheet" href="style.css">
+  <title>Application de gestion de budget</title>
+</head>
+<body>
+  <main>
+    <!-- section budget -->
+    <section class="section_budget">
+      <!-- logo du budget -->
+      <div class="budget_logo">
+        <i class="fa-solid fa-cash-register"></i>
+        <h3>Gestion du budget</h3>
+      </div>
+    </section>
+
+    <!-- container des sections -->
+    <div class="container_sections">
+        <!-- details budget -->
+         <section class="section_budget">
+           <div class="details_budget">
+             <div class="budget_total">
+               <div class="container_total">
+                 <h4>Total budget</h4>
+               </div>
+               <p><span id="total_budget"> {{totalRevenus}} </span>Fcfa</p>
+             </div>
+             <div class="budget_expense">
+               <div class="container_expense">
+                 <h4>Total dépense</h4>
+               </div>
+               <p><span id="total_expense"> {{totalDepenses}} </span> Fcfa</p>
+             </div>
+             <div class="budget_balance">
+               <div class="container_balance">
+                 <h4>Solde</h4>
+               </div>
+               <p><span id="total_balance"> {{solde}} </span> Fcfa</p>
+             </div>
+           </div>
+         </section>
+
+    <!-- section depenses -->
+      <section class="section_depenses">
+        <h2>Listes des depenses</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Titre</th>
+              <th>Montant</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="tbody_depense">
+             {{#each depenses}}
+              <tr>
+                <td>{{this.titre}}</td>
+                <td>{{this.montant}} FCFA</td>    
+                <td>
+                  <button onclick="supprimerDepense({{this.id}})" style="background-color: red; opacity: 0.7"><i class="fa-solid fa-trash" ></i></button>
+                  <button
+                      onclick="ouvrirFormulaireModification(this)"
+                      data-id="{{this.id}}"
+                      data-titre="{{this.titre}}"
+                      data-montant="{{this.montant}}" 
+                      data-type="depense" 
+                      style="background-color: yellow; opacity: 0.7"><i class="fa-solid fa-edit" ></i></button>
+                </td>
+              </tr>
+             {{/each}}
+          </tbody>
+          <tfoot>
+            <tr>   
+              <td>AJOUTER DEPENSE <a href="http://localhost:3000/depenses"><i id="ajoutDepense" class="fa-solid fa-square-plus"></i></a></td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+
+      <!-- section revenus -->
+      <section class="section_revenus">
+        <h2>Listes des revenus</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Titre</th>
+              <th>Montant</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="tbody_revenus">
+           {{#each revenus}}
+              <tr>
+                <td>{{this.titre}}</td>
+                <td>{{this.montant}} FCFA</td>    
+                <td>
+                    <button onclick="supprimerRevenu({{this.id}})"  type="button" style="background-color: red; opacity: 0.7">
+                      <i class="fa-solid fa-trash"></i>
+                    </button>
+
+                      <button
+                      onclick="ouvrirFormulaireModification(this)"
+                      data-id="{{this.id}}"
+                      data-titre="{{this.titre}}"
+                      data-montant="{{this.montant}}"
+                      data-type="revenu"
+                      type="button"
+                      style="background-color: yellow; opacity: 0.7">
+                      <i class="fa-solid fa-edit"></i>
+                    </button>
+
+                </td>
+              </tr>
+            {{/each}}
+
+          </tbody>
+          <tfoot>
+            <tr>
+              <td>AJOUTER REVENUS 
+              <a href="http://localhost:3000/revenus"><i id="ajoutRevenu" class="fa-solid fa-square-plus"></i></a>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+    </div>
+
+      <div class="popup_message">
+        <div class="popup_content">
+          <p>La depense a été ajoutée avec succès</p>
+        </div>
+      </div>
+  </main>
+
+   <div class="formulaire_modification hide ">
+      <div class="formulaire_modification_content">
+        <h2>Modification</h2>
+        
+        <div class="container_modification">
+
+          <input type="hidden" id="mod-type"> 
+          <input type="hidden" id="mod-id">
+
+          <div class="container_modification_titre">
+          <label for="titre">Titre</label>
+          <input type="text" name="titre" id="titre" required>
+          </div>
+
+          <div class="container_modification_montant">
+          <label for="montant">Montant</label>
+          <input type="number" name="montant" id="montant" required>
+          </div>
+
+          <button type="button" id="modifierButton">Modifier</button>
+       </div>
+
+    </div>
+   </div>
+</body>
+
+<script>
+
+
+// Fonction pour ajouter un revenu
+function supprimerRevenu(id) {
+  fetch(`/revenus/${id}`, {
+    method: 'DELETE',
+  }).then(() => {
+    window.location.reload();
+  });
+};
+
+// Fonction pour supprimer une depense
+function supprimerDepense(id) {
+  fetch(`/depenses/${id}`, {
+     method: 'DELETE',
+  }).then(() => {
+    window.location.reload();
+  });
+};
+      
+function ouvrirFormulaireModification(button) {
+  const id = button.dataset.id;
+  const titre = button.dataset.titre;
+  const montant = button.dataset.montant;
+  const type = button.dataset.type; // 👈 récupère "revenu" ou "depense"
+
+  document.getElementById('titre').value = titre;
+  document.getElementById('montant').value = montant;
+  document.getElementById('mod-id').value = id;
+  document.getElementById('mod-type').value = type; // 👈 stocke le type
+
+  document.querySelector('.formulaire_modification').classList.remove('hide');
+  document.querySelector('.formulaire_modification').scrollIntoView({ behavior: 'smooth' });
+}
+
+  document.getElementById('modifierButton').addEventListener('click', () => {
+  const id = document.getElementById('mod-id').value;
+  const type = document.getElementById('mod-type').value; // "revenu" ou "depense"
+  const titre = document.getElementById('titre').value;
+  const montant = document.getElementById('montant').value;
+
+  // 👇 construit dynamiquement l’URL en fonction du type
+  const url = type === 'depense' ? `/depenses/${id}` : `/revenus/${id}`;
+
+  fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ titre, montant }),
+  }).then(() => {
+    window.location.reload();
+  });
+});
+          
+</script>
+</html>
